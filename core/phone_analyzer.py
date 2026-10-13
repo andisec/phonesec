@@ -2,6 +2,7 @@ import phonenumbers
 from phonenumbers import geocoder, carrier, timezone
 from colorama import Fore, Style
 import json
+from core.osint_links import OSINTLinks, LocationMapper, TimeInfo, RiskAssessment
 
 class PhoneAnalyzer:
     def __init__(self):
@@ -83,7 +84,7 @@ class PhoneAnalyzer:
 
         return self.results
 
-    def print_results(self):
+    def print_results(self, show_osint_links=True, show_risk=True):
         """Print analysis results with colors"""
         if not self.results:
             print(f"{Fore.RED}[!] No analysis data available{Style.RESET_ALL}")
@@ -98,6 +99,10 @@ class PhoneAnalyzer:
         print(f"{Fore.YELLOW}📱 Validation:{Style.RESET_ALL}")
         print(f"   Valid: {valid_color}{self.results['is_valid']}{Style.RESET_ALL}")
         print(f"   Possible: {Fore.GREEN if self.results['is_possible'] else Fore.RED}{self.results['is_possible']}{Style.RESET_ALL}\n")
+
+        # Risk Assessment
+        if show_risk:
+            RiskAssessment.print_risk_assessment(self.results)
 
         # Format Information
         print(f"{Fore.YELLOW}📞 Format Information:{Style.RESET_ALL}")
@@ -117,6 +122,16 @@ class PhoneAnalyzer:
         print(f"   Region Code:   {Fore.GREEN}{self.results['region_code']}{Style.RESET_ALL}")
         print(f"   Carrier:       {Fore.GREEN}{self.results['carrier']}{Style.RESET_ALL}")
         print(f"   Timezones:     {Fore.GREEN}{', '.join(self.results['timezones'])}{Style.RESET_ALL}\n")
+
+        # Current Time Info
+        TimeInfo.print_time_info(self.results['timezones'])
+
+        # Map Links
+        LocationMapper.print_map_links(self.results['location'], self.results['region_code'])
+
+        # OSINT Links
+        if show_osint_links:
+            OSINTLinks.print_links(self.results['international_format'])
 
         print(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}\n")
 

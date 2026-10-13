@@ -25,7 +25,7 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-PIPFILE.lock
+PIPENV
 
 # PyInstaller
 *.manifest
@@ -126,6 +126,15 @@ dmypy.json
 reports/*.json
 reports/*.html
 reports/*.txt
-*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
-Thumbs.db
+
+# Test files
+test_numbers.txt
+temp_*.txt
